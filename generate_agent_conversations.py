@@ -32,15 +32,15 @@ if __name__ == "__main__":
     original_data_path = "./data/samples_500/captions.json"
     output_data_path = "./data/samples_500/agent_conversation.json"
 
-    model = "gpt-5"
+    model = "gpt-5-mini"
 
     prompt = """Construct three long conversations start with the image. 
     Each conversation should contain about 10 paragraphs, and each paragraph is about 100 words. 
-    Do not just limit the content to describing the image details. 
-    You may dive deeply into a specific aspect or transition into different topics as the conversation goes.
-    The first conversation should stay most focused on the image. 
+    The first conversation should stay almost most focused on topic related to the image. 
     The second conversation should be more diverse and may go beyond the image. 
     The third conversation should be the most creative and diverse. It can deviate heavily from the image and jump to other topics.
+    Do not just limit the content to describing the image details, especially for the second and the third. 
+    You may dive deeply into a specific aspect or gradually transition into different topics as the conversation goes.
     Return the response in a json format. The keys are 'difficulty_1', 'difficulty_2' and 'difficulty_3' 
     Each value is a list of the paragraphs."""
 
