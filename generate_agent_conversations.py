@@ -88,8 +88,8 @@ if __name__ == "__main__":
     with ProcessPoolExecutor(max_workers=MAX_WORKERS) as exe:
         futures = {
             exe.submit(process_item, key, val, prompt, model): key
-            # for key, val in data.items()
-            for key, val in list(data.items())[:4]
+            for key, val in data.items()
+            # for key, val in list(data.items())[:4]
         }
 
         for fut in tqdm(as_completed(futures), total=len(futures), desc="Generating Conversation"):
