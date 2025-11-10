@@ -16,7 +16,7 @@ def generate_paragraphs(prompt, image_url, model="gpt-5-nano"):
             {
                 "role": "user",
                 "content": [
-                    { "type": "input_text", "text": prompt },
+                    { "type": "input_text", "text": prompt},
                     {
                         "type": "input_image",
                         "image_url": image_url,
@@ -32,17 +32,26 @@ if __name__ == "__main__":
     original_data_path = "./data/samples_500/captions.json"
     output_data_path = "./data/samples_500/agent_conversation.json"
 
-    model = "gpt-5-mini"
+    model = "gpt-5-nano"
+    num_paragraph = 10
+    paragraph_length = 100
 
-    prompt = """Construct three long conversations start with the image. 
-    Each conversation should contain about 10 paragraphs, and each paragraph is about 100 words. 
-    The first conversation should stay almost most focused on topic related to the image. 
-    The second conversation should be more diverse and may go beyond the image. 
-    The third conversation should be the most creative and diverse. It can deviate heavily from the image and jump to other topics.
-    Do not just limit the content to describing the image details, especially for the second and the third. 
-    You may dive deeply into a specific aspect or gradually transition into different topics as the conversation goes.
-    Return the response in a json format. The keys are 'difficulty_1', 'difficulty_2' and 'difficulty_3' 
+    prompt = f"""Construct three long context start with the image, as descriptions for every paragraph.\
+    Each context should contain about {num_paragraph} paragraphs, and each paragraph is about {paragraph_length} words.\
+    Paragraph 1 in each context must start with something highly relevant to the image.\
+    As the paragraphs progress, the topic may gradually expand to related ideas,\
+    but each new paragraph should still maintain at least a loose connection to something previously mentioned,\
+    even if the connection becomes weaker.\
+    The first context should stay almost most focused on topic related to the image.\
+    Almost every paragraph should relate to the image or its direct concepts.\
+    The second context should be more diverse and may go beyond the image.\
+    Later paragraphs may explore broader ideas, but must still connect to elements introduced earlier.\
+    The third context should be the most creative and diverse. Paragraphs can shift topics boldly,\
+    but every transition must still trace back to something mentioned before.\
+    Return the response in a json format. The keys are 'difficulty_1', 'difficulty_2' and 'difficulty_3'\
     Each value is a list of the paragraphs."""
+
+    print(prompt)
 
     with open(original_data_path) as f:
         data = json.load(f)
@@ -53,7 +62,6 @@ if __name__ == "__main__":
         response = generate_paragraphs(prompt=prompt, image_url=val["url"], model="gpt-5")
         response_dict = json.loads(response)
         data_with_conversation[key] = {**val, **response_dict}
-        break
 
     with open(output_data_path, "a", encoding="utf-8") as f:
         json.dump(data_with_conversation, f, ensure_ascii=False)
